@@ -340,6 +340,7 @@ SOFTWARE.
         },
 
         init() {
+          console.log('ruuning edgehandles init')
           const self = this;
           const opts = Object.assign({}, defaults, params);
           const $container = $(this);
@@ -363,6 +364,8 @@ SOFTWARE.
                 }
                 return acc
               }, {})
+          console.log('ruuning edgehandles init, handlePositions')
+          console.log(handlePositions)
           let mx,
             my;
           let hoverTimeout;
@@ -911,8 +914,8 @@ SOFTWARE.
               else if (axisY === 'bottom') moveY = h / 2;
 
               // set handle x and y based on adjusted positions
-              handlePositions.hx = p.x + moveX;
-              handlePositions.hy = p.y + moveY;
+              handlePositions[key].hx = p.x + moveX;
+              handlePositions[key].hy = p.y + moveY;
               // hx = p.x + moveX;
               // hy = p.y + moveY;
               return undefined
@@ -999,10 +1002,10 @@ SOFTWARE.
                 }
 
                 const existsProximateHandle =
-                      Object.keys(options().handlePositions).reduce(
+                      Object.keys(handlePositions).reduce(
                         (acc, key) => {
-                          if (Math.abs(x - options().handlePositions[key].hx) > hrTarget ||
-                              Math.abs(y - options().handlePositions[key].hy) > hrTarget) {
+                          if (Math.abs(x - handlePositions[key].hx) > hrTarget ||
+                              Math.abs(y - handlePositions[key].hy) > hrTarget) {
                             return acc
                           }
                           selectedHandle = key
