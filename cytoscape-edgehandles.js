@@ -364,8 +364,6 @@ SOFTWARE.
                 }
                 return acc
               }, {})
-          console.log('ruuning edgehandles init, handlePositions')
-          console.log(handlePositions)
           let mx,
             my;
           let hoverTimeout;
@@ -543,10 +541,6 @@ SOFTWARE.
               // handlePositions[key].hx *= 2;
               ctx.fillStyle = options().handleTypes[key].handleColor;
               ctx.strokeStyle = options().handleTypes[key].handleOutlineColor;
-              console.log('drawhandles key')
-              console.log(key)
-              console.log('drawhandles handlePositions')
-              console.log(handlePositions)
 
               ctx.beginPath();
               ctx.arc(handlePositions[key].hx, handlePositions[key].hy, hr, 0, 2 * Math.PI);
@@ -966,7 +960,7 @@ SOFTWARE.
                 // also don't trigger when grabbing a node etc
               }
 
-              // console.log('mouseover startHandler %s %o', this.id(), this);
+              console.log('mouseover startHandler %s %o', this.id(), this);
 
               if (lastMdownHandler) {
                 $container[0].removeEventListener('mousedown', lastMdownHandler, true);
@@ -1027,7 +1021,7 @@ SOFTWARE.
                   return; // we don't want this going off if we have the forced start to consider
                 }
 
-                // console.log('mdownHandler %s %o', node.id(), node);
+                console.log('mdownHandler %s %o', node.id(), node);
                 mdownOnHandle = true;
 
                 e.preventDefault();
@@ -1039,7 +1033,7 @@ SOFTWARE.
                 node.trigger('cyedgehandles.start');
 
                 function doneMoving(dmEvent) {
-                  // console.log('doneMoving %s %o', node.id(), node);
+                  console.log('doneMoving %s %o', node.id(), node);
 
                   if (!mdownOnHandle || inForceStart) {
                     return;
@@ -1066,7 +1060,7 @@ SOFTWARE.
               }
 
               function moveHandler(e) {
-                // console.log('mousemove moveHandler %s %o', node.id(), node);
+                console.log('mousemove moveHandler %s %o', node.id(), node);
 
                 const pageX = !e.touches ? e.pageX : e.touches[0].pageX;
                 const pageY = !e.touches ? e.pageY : e.touches[0].pageY;
@@ -1092,14 +1086,14 @@ SOFTWARE.
               const node = this;
               const target = this;
 
-              // console.log('mouseover hoverHandler')
+              console.log('mouseover hoverHandler')
 
               if (disabled() || drawMode || this.hasClass('edgehandles-preview')) {
                 return; // ignore preview nodes
               }
 
               if (mdownOnHandle) { // only handle mdown case
-                // console.log( 'mouseover hoverHandler %s $o', node.id(), node );
+                console.log( 'mouseover hoverHandler %s $o', node.id(), node );
 
                 hoverOver(node);
 
