@@ -904,8 +904,8 @@ SOFTWARE.
               let moveY = 0;
 
               // grab axis's
-              const axisX = options()[key].handlePosition.split(' ')[0].toLowerCase();
-              const axisY = options()[key].handlePosition.split(' ')[1].toLowerCase();
+              const axisX = options().handleTypes[key].handlePosition.split(' ')[0].toLowerCase();
+              const axisY = options().handleTypes[key].handlePosition.split(' ')[1].toLowerCase();
 
               // based on handlePosition move left/right/top/bottom. Middle/middle will just be normal
               if (axisX === 'left') moveX = -(w / 2);
