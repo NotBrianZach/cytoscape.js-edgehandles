@@ -895,14 +895,14 @@ SOFTWARE.
 
             hr = options().handleSize / 2 * cy.zoom();
 
-            Object.keys(options().handlePositions).map((key) => {
+            Object.keys(handlePositions).map((key) => {
               // store how much we should move the handle from origin(p.x, p.y)
               let moveX = 0;
               let moveY = 0;
 
               // grab axis's
-              const axisX = options().handlePositions[key].split(' ')[0].toLowerCase();
-              const axisY = options().handlePositions[key].split(' ')[1].toLowerCase();
+              const axisX = handlePositions[key].split(' ')[0].toLowerCase();
+              const axisY = handlePositions[key].split(' ')[1].toLowerCase();
 
               // based on handlePosition move left/right/top/bottom. Middle/middle will just be normal
               if (axisX === 'left') moveX = -(w / 2);
@@ -911,8 +911,8 @@ SOFTWARE.
               else if (axisY === 'bottom') moveY = h / 2;
 
               // set handle x and y based on adjusted positions
-              options().handlePositions.hx = p.x + moveX;
-              options().handlePositions.hy = p.y + moveY;
+              handlePositions.hx = p.x + moveX;
+              handlePositions.hy = p.y + moveY;
               // hx = p.x + moveX;
               // hy = p.y + moveY;
               return undefined
