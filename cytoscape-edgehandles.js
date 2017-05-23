@@ -983,9 +983,9 @@ SOFTWARE.
 
               node.trigger('cyedgehandles.showhandle');
 
-
               // TODO convert this for multiple handles
               function mdownHandler(e) {
+                console.log('mdownHandler start %o', e)
                 $container[0].removeEventListener('mousedown', mdownHandler, true);
                 $container[0].removeEventListener('touchstart', mdownHandler, true);
 
@@ -1010,7 +1010,7 @@ SOFTWARE.
                           return true
                         }, false)
 
-                if (existsProximateHandle) {
+                if (!existsProximateHandle) {
                   return;
                 }
                 // if (Math.abs(x - hx) > hrTarget || Math.abs(y - hy) > hrTarget) {
