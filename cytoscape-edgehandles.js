@@ -679,8 +679,9 @@ SOFTWARE.
               cy.$('.edgehandles-ghost').remove();
             }
 
-            console.log('makeEdges first return check sizes')
+            console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source, targets, classes, added)
             if (source.size() === 0 || targets.size() === 0) {
+              console.log(' innnn makeEdges first return check sizes')
               const presumptiveTarget = cy.nodes('.edgehandles-presumptive-target');
               options().cancel(source, { x: mx, y: my }, presumptiveTarget);
               source.trigger('cyedgehandles.cancel', [{ x: mx, y: my },
