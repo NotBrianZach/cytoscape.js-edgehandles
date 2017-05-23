@@ -669,6 +669,7 @@ SOFTWARE.
           }, lineDrawRate, { leading: true });
 
           function makeEdges(preview, src, tgt) {
+            console.log('makeEdges preview %o src %o tgt %o', preview, src, tgt)
             const source = src || cy.nodes('.edgehandles-source');
             let targets = tgt || cy.nodes('.edgehandles-target');
             const classes = preview ? 'edgehandles-preview' : '';
@@ -678,6 +679,7 @@ SOFTWARE.
               cy.$('.edgehandles-ghost').remove();
             }
 
+            console.log('makeEdges first return check sizes')
             if (source.size() === 0 || targets.size() === 0) {
               const presumptiveTarget = cy.nodes('.edgehandles-presumptive-target');
               options().cancel(source, { x: mx, y: my }, presumptiveTarget);
@@ -687,6 +689,7 @@ SOFTWARE.
               return; // nothing to do :(
             }
 
+            console.log('makeEdges second return,just remove preview class if we already have the edges')
             // just remove preview class if we already have the edges
             if (!src && !tgt) {
               if (!preview && options().preview) {
@@ -1013,9 +1016,6 @@ SOFTWARE.
                 if (!existsProximateHandle) {
                   return;
                 }
-                // if (Math.abs(x - hx) > hrTarget || Math.abs(y - hy) > hrTarget) {
-                //   return; // only consider this a proper mousedown if on the handle
-                // }
 
                 if (inForceStart) {
                   return; // we don't want this going off if we have the forced start to consider
