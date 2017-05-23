@@ -554,8 +554,8 @@ SOFTWARE.
                 ctx.stroke();
               }
 
-              if (options()[key].handleIcon) {
-                const icon = options()[key].handleIcon;
+              if (options().handleTypes[key].handleIcon) {
+                const icon = options().handleTypes[key].handleIcon;
                 const width = icon.width * cy.zoom()
                 const height = icon.height * cy.zoom();
                 ctx.drawImage(icon, handlePositions[key].hx - (width / 2),
