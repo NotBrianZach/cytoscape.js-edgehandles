@@ -543,6 +543,10 @@ SOFTWARE.
               // handlePositions[key].hx *= 2;
               ctx.fillStyle = options().handleTypes[key].handleColor;
               ctx.strokeStyle = options().handleTypes[key].handleOutlineColor;
+              console.log('drawhandles key')
+              console.log(key)
+              console.log('drawhandles handlePositions')
+              console.log(handlePositions)
 
               ctx.beginPath();
               ctx.arc(handlePositions[key].hx, handlePositions[key].hy, hr, 0, 2 * Math.PI);
@@ -672,7 +676,7 @@ SOFTWARE.
 
           function makeEdges(preview, src, tgt) {
             const source = src || cy.nodes('.edgehandles-source');
-            const targets = tgt || cy.nodes('.edgehandles-target');
+            let targets = tgt || cy.nodes('.edgehandles-target');
             const classes = preview ? 'edgehandles-preview' : '';
             let added = cy.collection();
 
@@ -706,9 +710,9 @@ SOFTWARE.
             // from "childNodes" (which are subnodes) to "parentNodes" (in the ultimate irony)
             // TODO might be a better way to accomplish this than
             // filter targets that aren't of type "parentNode"
-            targets = targets.filter(function(target){
-              return target.data.type === 'parentNode';
-            })
+            console.log('targets in makeEdges')
+            console.log(targets)
+            targets = targets.filter(target => target.data.type === 'parentNode')
             for (let i = 0; i < targets.length; i += 1) {
               const target = targets[i];
 
