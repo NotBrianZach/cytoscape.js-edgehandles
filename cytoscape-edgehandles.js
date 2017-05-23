@@ -583,9 +583,9 @@ SOFTWARE.
             // Object.keys(handlePositions).map((key, index) => {
             // }
             if (options().handleLineType !== 'ghost') {
-              ctx.fillStyle = options().handleColor;
-              ctx.strokeStyle = options().handleColor;
-              ctx.lineWidth = options().handleLineWidth;
+              ctx.fillStyle = options().handleTypes[selectedHandle].handleColor;
+              ctx.strokeStyle = options().handleTypes[selectedHandle].handleColor;
+              ctx.lineWidth = options().handleTypes[selectedHandle].handleLineWidth;
             }
 
             switch (options().handleLineType) {
@@ -634,8 +634,8 @@ SOFTWARE.
               case 'straight':
 
                 ctx.beginPath();
-                ctx.moveTo(options().handlePosition[selectedHandle].hx,
-                           options().handlePosition[selectedHandle].hy);
+                ctx.moveTo(handlePositions[selectedHandle].hx,
+                           handlePositions[selectedHandle].hy);
                 ctx.lineTo(x, y);
                 ctx.closePath();
                 ctx.stroke();
@@ -651,8 +651,8 @@ SOFTWARE.
                 }
 
                 ctx.beginPath();
-                ctx.moveTo(options().handlePosition[selectedHandle].hx,
-                           options().handlePosition[selectedHandle].hy);
+                ctx.moveTo(handlePositions[selectedHandle].hx,
+                           handlePositions[selectedHandle].hy);
 
                 for (let i = 0; i < linePoints.length; i += 1) {
                   const pt = linePoints[i];
