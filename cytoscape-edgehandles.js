@@ -631,7 +631,8 @@ SOFTWARE.
               case 'straight':
 
                 ctx.beginPath();
-                ctx.moveTo(hx, hy);
+                ctx.moveTo(options().handlePosition[selectedHandle].hx,
+                           options().handlePosition[selectedHandle].hy);
                 ctx.lineTo(x, y);
                 ctx.closePath();
                 ctx.stroke();
@@ -647,7 +648,8 @@ SOFTWARE.
                 }
 
                 ctx.beginPath();
-                ctx.moveTo(hx, hy);
+                ctx.moveTo(options().handlePosition[selectedHandle].hx,
+                           options().handlePosition[selectedHandle].hy);
 
                 for (let i = 0; i < linePoints.length; i += 1) {
                   const pt = linePoints[i];
@@ -699,6 +701,11 @@ SOFTWARE.
             // TODO need to modify this logic to handle interrupts, invalidation, revalidations
             // done? no, also need to make sure we can only add edges
             // from "childNodes" (which are subnodes) to "parentNodes" (in the ultimate irony)
+            // TODO might be a better way to accomplish this than
+            // filter targets that aren't of type "parentNode"
+            targets = targets.filter(function(target){
+              return target.data.type === 'parentNode';
+            })
             for (let i = 0; i < targets.length; i += 1) {
               const target = targets[i];
 
@@ -991,15 +998,14 @@ SOFTWARE.
                   return; // sorry, no right clicks allowed
                 }
 
-                // TODO set selectedHandle
-                // right now it returns if x or y are too far away the one handle
-                // what I want is for it to check each handle for distance.
-                // if none of them are near enough the return, else
-                // set selectedHandle
                 const existsProximateHandle =
                       Object.keys(options().handlePositions).reduce(
                         (acc, key) => {
-                          
+                          if (Math.abs(x - options().handlePositions[key].hx) > hrTarget ||
+                              Math.abs(y - options().handlePositions[key].hy) > hrTarget) {
+                            return acc
+                          }
+                          selectedHandle = key
                           return true
                         }, false)
 
@@ -1015,7 +1021,6 @@ SOFTWARE.
                 }
 
                 // console.log('mdownHandler %s %o', node.id(), node);
-
                 mdownOnHandle = true;
 
                 e.preventDefault();
@@ -1069,7 +1074,6 @@ SOFTWARE.
                   drawHandles();
                 }
                 drawLine(x, y);
-
 
                 return false;
               }
