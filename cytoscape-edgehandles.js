@@ -360,7 +360,7 @@ SOFTWARE.
               Object.keys(params.handleTypes).reduce((acc, key) => {
                 acc[key] = {
                   hx: 0,
-                  hy: 0
+                  hy: 0,
                 }
                 return acc
               }, {})
@@ -685,7 +685,7 @@ SOFTWARE.
               const presumptiveTarget = cy.nodes('.edgehandles-presumptive-target');
               options().cancel(source, { x: mx, y: my }, presumptiveTarget);
               source.trigger('cyedgehandles.cancel', [{ x: mx, y: my },
-                presumptiveTarget
+                presumptiveTarget,
               ]);
               return; // nothing to do :(
             }
@@ -724,8 +724,8 @@ SOFTWARE.
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'purple',
-                          lineStyle: 'dotted'
-                        }
+                          lineStyle: 'dotted',
+                        },
                       }, options().edgeParams(source, target, 0))).addClass(classes);
                       const destinationEdge = cy.add(Object.assign({
                         group: 'edges',
@@ -733,7 +733,7 @@ SOFTWARE.
                           source: target.id(),
                           target: targets[i + 1].id(),
                           lineColor: 'purple',
-                          lineStyle: 'dashed'
+                          lineStyle: 'dashed',
                         },
                       }, options().edgeParams(target, targets[i + 1], 0))).addClass(classes);
 
@@ -851,7 +851,15 @@ SOFTWARE.
               const isLoop = node.hasClass('edgehandles-source');
               const loopAllowed = options().loopAllowed(node);
               const isGhost = node.hasClass('edgehandles-ghost-node');
-              const noEdge = options().edgeType(source, node) == null;
+              const noEdge = Object.keys(options().handleTypes).reduce((acc, key) => {
+                if (options().handleTypes[key].edgeType === null) {
+                  return true
+                }
+                return acc
+              },
+                                                                       false)
+
+              // const noEdge = options().edgeType(source, node) == null;
 
               node.addClass('edgehandles-presumptive-target');
 
@@ -1094,7 +1102,7 @@ SOFTWARE.
               }
 
               if (mdownOnHandle) { // only handle mdown case
-                console.log( 'mouseover hoverHandler %s $o', node.id(), node );
+                console.log('mouseover hoverHandler %s $o', node.id(), node);
 
                 hoverOver(node);
 
