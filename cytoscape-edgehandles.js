@@ -670,6 +670,7 @@ SOFTWARE.
 
           function makeEdges(preview, src, tgt) {
             console.log('makeEdges preview %o src %o tgt %o', preview, src, tgt)
+            console.log('makeEdges preview %o src %o tgt %o', preview.id(), src.id(), tgt.id())
             const source = src || cy.nodes('.edgehandles-source');
             let targets = tgt || cy.nodes('.edgehandles-target');
             const classes = preview ? 'edgehandles-preview' : '';
@@ -685,7 +686,7 @@ SOFTWARE.
               const presumptiveTarget = cy.nodes('.edgehandles-presumptive-target');
               options().cancel(source, { x: mx, y: my }, presumptiveTarget);
               source.trigger('cyedgehandles.cancel', [{ x: mx, y: my },
-                presumptiveTarget,
+                presumptiveTarget
               ]);
               return; // nothing to do :(
             }
