@@ -714,7 +714,7 @@ SOFTWARE.
             for (let i = 0; i < targets.length; i += 1) {
               const target = targets[i];
 
-              switch (options().edgeType(source, target)) {
+              switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
                   if (target.type() === 'parentNode') {
                     if ((i + 1) in targets) {
@@ -724,8 +724,8 @@ SOFTWARE.
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'purple',
-                          lineStyle: 'dotted',
-                        },
+                          lineStyle: 'dotted'
+                        }
                       }, options().edgeParams(source, target, 0))).addClass(classes);
                       const destinationEdge = cy.add(Object.assign({
                         group: 'edges',
@@ -733,7 +733,7 @@ SOFTWARE.
                           source: target.id(),
                           target: targets[i + 1].id(),
                           lineColor: 'purple',
-                          lineStyle: 'dashed',
+                          lineStyle: 'dashed'
                         },
                       }, options().edgeParams(target, targets[i + 1], 0))).addClass(classes);
 
