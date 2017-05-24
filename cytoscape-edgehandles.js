@@ -679,7 +679,7 @@ SOFTWARE.
               cy.$('.edgehandles-ghost').remove();
             }
 
-            console.log('makeEdges preview.id %o src.id %o tgt.id %o', preview.id(), src.id(), tgt.id())
+            // console.log('makeEdges preview.id %o src.id %o tgt.id %o', preview.id(), src.id(), tgt.id())
             console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source, targets, classes, added)
             if (source.size() === 0 || targets.size() === 0) {
               console.log(' innnn makeEdges first return check sizes')
