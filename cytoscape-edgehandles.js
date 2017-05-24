@@ -682,9 +682,9 @@ SOFTWARE.
             // console.log('makeEdges preview.id %o src.id %o tgt.id %o', preview.id(), src.id(), tgt.id())
             console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source, targets, classes, added)
             targets.map((key) =>
-                        console.log('targets[key].id(), %s',targets[key].id()))
+                        console.log('targets[key].id(), %s',targets[key]._private.data.id))
             source.map((key) =>
-                        console.log('source[key].id(), %s',source[key].id()))
+                        console.log('source[key].id(), %s',source[key]._private.data.id))
             // console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source.id(), targets.id(), classes, added)
             if (source.size() === 0 || targets.size() === 0) {
               console.log(' innnn makeEdges first return check sizes')
@@ -716,6 +716,8 @@ SOFTWARE.
             // filter targets that aren't of type "parentNode"
             console.log('targets in makeEdges')
             console.log(targets)
+            console.log('selectedHandle in makeEdges')
+            console.log(selectedHandle)
             targets = targets.filter(target => target.data.type === 'parentNode')
             for (let i = 0; i < targets.length; i += 1) {
               const target = targets[i];
