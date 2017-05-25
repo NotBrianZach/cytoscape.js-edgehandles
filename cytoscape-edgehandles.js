@@ -672,7 +672,7 @@ SOFTWARE.
           function makeEdges(preview, src, tgt) {
             console.log('makeEdges preview %o src %o tgt %o', preview, src, tgt)
             const source = src || cy.nodes('.edgehandles-source');
-            let targets = tgt || cy.nodes('.edgehandles-target');
+            const targets = tgt || cy.nodes('.edgehandles-target');
             const classes = preview ? 'edgehandles-preview' : '';
             let added = cy.collection();
 
@@ -739,7 +739,7 @@ SOFTWARE.
               console.log(options().handleTypes[selectedHandle].edgeType(source, target))
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
-                if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode') {
                     if ((i + 1) in targets) {
                       const interruptedEdge = cy.add(Object.assign({
                         group: 'edges',
@@ -763,6 +763,8 @@ SOFTWARE.
                         },
                       }, options().handleTypes[selectedHandle].edgeParams(source,
                                                                           targets[i + 1], 1))).addClass(classes);
+
+                      options().handleTypes[selectedHandle].interrupted(source.id(), target.id(), target[i+1].id())
                       added = added.add(interruptedEdge);
                       added = added.add(destinationEdge);
                       i += 1
@@ -770,7 +772,7 @@ SOFTWARE.
                   } // target.type() === 'childNode' then do nothing
                   break
                 case 'invalidates':
-                if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -782,11 +784,12 @@ SOFTWARE.
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
+                    options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
                 case 'revalidates':
-                if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -798,11 +801,12 @@ SOFTWARE.
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
+                    options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
                 case 'linkNodes':
-                if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -814,64 +818,11 @@ SOFTWARE.
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
+                    options().handleTypes[selectedHandle].linked(source.id(), target.id())
+
                     added = added.add(edge);
                   }
                   break
-                // case 'node':
-
-                //   var p1 = source.position();
-                //   var p2 = target.position();
-                //   var p;
-
-                //   if (source.id() === target.id()) {
-                //     p = {
-                //       x: p1.x + options().nodeLoopOffset,
-                //       y: p1.y + options().nodeLoopOffset,
-                //     };
-                //   } else {
-                //     p = {
-                //       x: (p1.x + p2.x) / 2,
-                //       y: (p1.y + p2.y) / 2,
-                //     };
-                //   }
-
-                //   var interNode = cy.add(Object.assign({
-                //     group: 'nodes',
-                //     position: p,
-                //   }, options().nodeParams(source, target))).addClass(classes);
-
-                //   var source2inter = cy.add(Object.assign({
-                //     group: 'edges',
-                //     data: {
-                //       source: source.id(),
-                //       target: interNode.id(),
-                //     },
-                //   }, options().edgeParams(source, target, 0))).addClass(classes);
-
-                //   var inter2target = cy.add(Object.assign({
-                //     group: 'edges',
-                //     data: {
-                //       source: interNode.id(),
-                //       target: target.id(),
-                //     },
-                //   }, options().edgeParams(source, target, 1))).addClass(classes);
-
-                //   added = added.add(interNode).add(source2inter).add(inter2target);
-
-                //   break;
-
-                // case 'flat':
-                //   var edge = cy.add(Object.assign({
-                //     group: 'edges',
-                //     data: {
-                //       source: source.id(),
-                //       target: target.id(),
-                //     },
-                //   }, options().edgeParams(source, target, 0))).addClass(classes);
-
-                //   added = added.add(edge);
-
-                //   break;
 
                 default:
                   target.removeClass('edgehandles-target');
@@ -880,7 +831,6 @@ SOFTWARE.
             }
 
             if (!preview) {
-              options().complete(source, targets, added);
               source.trigger('cyedgehandles.complete');
             }
           }
