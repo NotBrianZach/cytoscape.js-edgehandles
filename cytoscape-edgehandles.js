@@ -520,6 +520,7 @@ SOFTWARE.
           }
 
           function makePreview(source, target) {
+            console.log('makePreview makeEdges')
             makeEdges(true);
 
             target.trigger('cyedgehandles.addpreview');
@@ -681,24 +682,32 @@ SOFTWARE.
 
             // console.log('makeEdges preview.id %o src.id %o tgt.id %o', preview.id(), src.id(), tgt.id())
             console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source, targets, classes, added)
-            targets.map((key) =>
-                        console.log('targets[key].id(), %s',targets[key]._private.data.id))
-            source.map((key) =>
-                        console.log('source[key].id(), %s',source[key]._private.data.id))
+            targets.map(value =>
+                        console.log('targets[key].id(), %s', value.id()))
+            source.map(value =>
+                       console.log('source[key].id(), %s', value.id()))
             // console.log('makeEdges first return check sizes source %o targets %o classes %o added %o', source.id(), targets.id(), classes, added)
+
+            // TODO this is as far as it gets when drawing to a non connected node.
             if (source.size() === 0 || targets.size() === 0) {
               console.log(' innnn makeEdges first return check sizes')
               const presumptiveTarget = cy.nodes('.edgehandles-presumptive-target');
               options().cancel(source, { x: mx, y: my }, presumptiveTarget);
               source.trigger('cyedgehandles.cancel', [{ x: mx, y: my },
-                presumptiveTarget
+                presumptiveTarget,
               ]);
               return; // nothing to do :(
             }
 
             console.log('makeEdges second return,just remove preview class if we already have the edges')
+            // TODO it thinks we already have edges in some cases! but there aren't
+            // might need a broader conception of edges, need ability to draw multiple edges between same two nodes!
+
+            // Problem - not previewing correctly!
+
             // just remove preview class if we already have the edges
             if (!src && !tgt) {
+              console.log('preview value in makeEdges %s', preview)
               if (!preview && options().preview) {
                 added = cy.elements('.edgehandles-preview').removeClass('edgehandles-preview');
                 options().complete(source, targets, added);
@@ -718,33 +727,42 @@ SOFTWARE.
             console.log(targets)
             console.log('selectedHandle in makeEdges')
             console.log(selectedHandle)
-            targets = targets.filter(target => target.data.type === 'parentNode')
+            // targets = targets.filter(target => target.data.type === 'parentNode')
+            // targets = targets.filter(target => console.log('target %0', target))
+            console.log('target %s', targets[0]._private.data.type)
+            console.log('targets after filter')
+            console.log(targets)
             for (let i = 0; i < targets.length; i += 1) {
               const target = targets[i];
 
+              console.log('options().handleTypes[selectedHandle].edgeType(source, target)')
+              console.log(options().handleTypes[selectedHandle].edgeType(source, target))
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
-                  if (target.type() === 'parentNode') {
+                if (target._private.data.type === 'parentNode') {
                     if ((i + 1) in targets) {
                       const interruptedEdge = cy.add(Object.assign({
                         group: 'edges',
                         data: {
+                          id: `${source.id()}interrupts${target.id()}`,
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'purple',
                           lineStyle: 'dotted',
                         },
-                      }, options().edgeParams(source, target, 0))).addClass(classes);
+                      }, options().handleTypes[selectedHandle].edgeParams(source,
+                                                                          target, 0))).addClass(classes);
                       const destinationEdge = cy.add(Object.assign({
                         group: 'edges',
                         data: {
+                          id: `${target.id()}interruptedto${targets[i + 1].id()}`,
                           source: target.id(),
                           target: targets[i + 1].id(),
                           lineColor: 'purple',
                           lineStyle: 'dashed',
                         },
-                      }, options().edgeParams(target, targets[i + 1], 0))).addClass(classes);
-
+                      }, options().handleTypes[selectedHandle].edgeParams(source,
+                                                                          targets[i + 1], 1))).addClass(classes);
                       added = added.add(interruptedEdge);
                       added = added.add(destinationEdge);
                       i += 1
@@ -752,31 +770,49 @@ SOFTWARE.
                   } // target.type() === 'childNode' then do nothing
                   break
                 case 'invalidates':
-                  if (target.type() === 'parentNode') {
+                if (target._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
+                        id: `${source.id()}invalidates${target.id()}`,
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'red',
                         lineStyle: 'solid',
                       },
-                    }, options().edgeParams(source, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
                     added = added.add(edge);
                   }
                   break
                 case 'revalidates':
-                  if (target.type() === 'parentNode') {
+                if (target._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
+                        id: `${source.id()}revalidates${target.id()}`,
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'green',
                         lineStyle: 'solid',
                       },
-                    }, options().edgeParams(source, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
+
+                    added = added.add(edge);
+                  }
+                  break
+                case 'linkNodes':
+                if (target._private.data.type === 'parentNode') {
+                    const edge = cy.add(Object.assign({
+                      group: 'edges',
+                      data: {
+                        id: `${source.id()}to${target.id()}`,
+                        source: source.id(),
+                        target: target.id(),
+                        lineColor: 'black',
+                        lineStyle: 'solid',
+                      },
+                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
                     added = added.add(edge);
                   }
@@ -908,7 +944,6 @@ SOFTWARE.
             }
           }
 
-          // TODO change this for multiple handles
           function setHandleDimensions(node) {
             const p = node.renderedPosition();
             const h = node.renderedHeight();
@@ -973,6 +1008,11 @@ SOFTWARE.
               dragHandler,
               grabHandler;
             cy.on('mouseover tap', 'node', startHandler = function (e) {
+              // TODO
+              // might need to disambiguate between parent and child node
+              // when assigning value to node here
+              // destination nodes can only be parents,
+              // source nodes can only be children
               const node = this;
 
               if (disabled() || drawMode || mdownOnHandle || grabbingNode || this.hasClass('edgehandles-preview') || inForceStart || this.hasClass('edgehandles-ghost-node') || node.filter(options().handleNodes).length === 0) {
@@ -1060,6 +1100,7 @@ SOFTWARE.
                   mdownOnHandle = false;
                   $(window).off('mousemove touchmove', moveHandler);
 
+                  console.log('doneMoving makeEdges')
                   makeEdges();
                   resetToDefaultState();
 
@@ -1211,6 +1252,7 @@ SOFTWARE.
                     inForceStart = false; // now we're done so reset the flag
                     mdownOnHandle = false; // we're also no longer down on the node
 
+                    console.log('downHandler makeEdges')
                     makeEdges();
 
                     options().stop(node);
@@ -1246,6 +1288,7 @@ SOFTWARE.
                 const loopAllowed = options().loopAllowed(target);
 
                 if (!isLoop || (isLoop && loopAllowed)) {
+                  console.log('tap node handler makeEdges')
                   makeEdges(false, source, target);
 
                   // options().complete( node );
@@ -1334,6 +1377,7 @@ SOFTWARE.
               const tapOk = drawMode && e.type === 'tapend';
 
               if (cxtOk || tapOk) {
+                console.log('cxttapend tapend makeEdges')
                 makeEdges();
 
                 if (sourceNode) {
