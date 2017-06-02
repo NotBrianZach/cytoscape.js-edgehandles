@@ -170,11 +170,6 @@ SOFTWARE.
           stop(sourceNode) {
           // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
           },
-          // TODO might need this for interrupts? since draws two edges?
-          // but then might want slightly different behavior for interrupts
-          // than the typical drag over,
-          // drag over one selects interrupted node, and then another selects the destination
-          // but will round down and do nothing if you select odd number of nodes
           edgeParams(sourceNode, targetNode, i) {
             // for edges between the specified source and target
             // return element object to be passed to cy.add() for edge
@@ -361,6 +356,7 @@ SOFTWARE.
                 acc[key] = {
                   hx: 0,
                   hy: 0,
+                  displayed: true
                 }
                 return acc
               }, {})
@@ -477,9 +473,7 @@ SOFTWARE.
           }
 
           let lastPanningEnabled,
-            lastZoomingEnabled,
-            lastBoxSelectionEnabled;
-
+            lastZoomingEnabled, lastBoxSelectionEnabled;
           function disableGestures() {
             lastPanningEnabled = cy.panningEnabled();
             lastZoomingEnabled = cy.zoomingEnabled();
@@ -539,28 +533,29 @@ SOFTWARE.
 
           function drawHandles() {
             Object.keys(handlePositions).map((key, index) => {
-              // handlePositions[key].hx *= 2;
-              ctx.fillStyle = options().handleTypes[key].handleColor;
-              ctx.strokeStyle = options().handleTypes[key].handleOutlineColor;
+              if (handlePositions[key].display) {
+                ctx.fillStyle = options().handleTypes[key].handleColor;
+                ctx.strokeStyle = options().handleTypes[key].handleOutlineColor;
 
-              ctx.beginPath();
-              ctx.arc(handlePositions[key].hx, handlePositions[key].hy, hr, 0, 2 * Math.PI);
-              ctx.closePath();
-              ctx.fill();
+                ctx.beginPath();
+                ctx.arc(handlePositions[key].hx, handlePositions[key].hy, hr, 0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
 
-              if (options().handleOutlineWidth) {
-                ctx.lineWidth = options().handleTypes[key].handleLineWidth * cy.zoom();
-                ctx.stroke();
-              }
+                if (options().handleOutlineWidth) {
+                  ctx.lineWidth = options().handleTypes[key].handleLineWidth * cy.zoom();
+                  ctx.stroke();
+                }
 
-              if (options().handleTypes[key].handleIcon) {
-                const icon = options().handleTypes[key].handleIcon;
-                const width = icon.width * cy.zoom()
-                const height = icon.height * cy.zoom();
-                ctx.drawImage(icon, handlePositions[key].hx - (width / 2),
-                              handlePositions[key].hy - (height / 2),
-                              width,
-                              height);
+                if (options().handleTypes[key].handleIcon) {
+                  const icon = options().handleTypes[key].handleIcon;
+                  const width = icon.width * cy.zoom()
+                  const height = icon.height * cy.zoom();
+                  ctx.drawImage(icon, handlePositions[key].hx - (width / 2),
+                                handlePositions[key].hy - (height / 2),
+                                width,
+                                height);
+                }
               }
             });
 
@@ -904,6 +899,11 @@ SOFTWARE.
             hr = options().handleSize / 2 * cy.zoom();
 
             Object.keys(handlePositions).map((key) => {
+              if (options().handleTypes[key].handleNodes(node)) {
+                handlePositions[key].display = true
+              } else {
+                handlePositions[key].display = false
+              }
               // store how much we should move the handle from origin(p.x, p.y)
               let moveX = 0;
               let moveY = 0;
@@ -960,14 +960,7 @@ SOFTWARE.
               dragHandler,
               grabHandler;
             cy.on('mouseover tap', 'node', startHandler = function (e) {
-              // TODO
-              // might need to disambiguate between parent and child node
-              // when assigning value to node here
-              // destination nodes can only be parents,
-              // source nodes can only be children
               const node = this;
-              console.log('node.filter(options().handleNodes)')
-              console.log(node.filter(options().handleNodes))
               if (disabled() || drawMode || mdownOnHandle || grabbingNode || this.hasClass('edgehandles-preview') || inForceStart || this.hasClass('edgehandles-ghost-node') || node.filter(options().handleNodes).length === 0) {
                 return; // don't override existing handle that's being dragged
                 // also don't trigger when grabbing a node etc
@@ -996,7 +989,6 @@ SOFTWARE.
 
               node.trigger('cyedgehandles.showhandle');
 
-              // TODO convert this for multiple handles
               function mdownHandler(e) {
                 console.log('mdownHandler start %o', e)
                 $container[0].removeEventListener('mousedown', mdownHandler, true);
@@ -1015,7 +1007,8 @@ SOFTWARE.
                 const existsProximateHandle =
                       Object.keys(handlePositions).reduce(
                         (acc, key) => {
-                          if (Math.abs(x - handlePositions[key].hx) > hrTarget ||
+                          if (!handlePositions[key].display ||
+                              Math.abs(x - handlePositions[key].hx) > hrTarget ||
                               Math.abs(y - handlePositions[key].hy) > hrTarget) {
                             return acc
                           }
