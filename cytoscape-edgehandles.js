@@ -739,7 +739,7 @@ SOFTWARE.
               console.log(options().handleTypes[selectedHandle].edgeType(source, target))
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
-                  if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
                     console.log('interrupts')
                     if ((i + 1) in targets) {
                       console.log('interrupts i+1 in targets')
@@ -774,7 +774,7 @@ SOFTWARE.
                   } // target.type() === 'childNode' then do nothing
                   break
                 case 'invalidates':
-                  if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -784,14 +784,14 @@ SOFTWARE.
                         lineColor: 'red',
                         lineStyle: 'solid',
                       },
-                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source, source._private.data.target, target, 0))).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
                 case 'revalidates':
-                  if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
                     console.log('revalidates source, target')
                     console.log(source)
                     console.log(target)
@@ -810,7 +810,7 @@ SOFTWARE.
                   }
                   break
                 case 'linkNodes':
-                  if (target._private.data.type === 'parentNode') {
+                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -966,7 +966,8 @@ SOFTWARE.
               // destination nodes can only be parents,
               // source nodes can only be children
               const node = this;
-
+              console.log('node.filter(options().handleNodes)')
+              console.log(node.filter(options().handleNodes))
               if (disabled() || drawMode || mdownOnHandle || grabbingNode || this.hasClass('edgehandles-preview') || inForceStart || this.hasClass('edgehandles-ghost-node') || node.filter(options().handleNodes).length === 0) {
                 return; // don't override existing handle that's being dragged
                 // also don't trigger when grabbing a node etc
