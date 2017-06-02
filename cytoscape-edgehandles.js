@@ -740,7 +740,9 @@ SOFTWARE.
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
                   if (target._private.data.type === 'parentNode') {
+                    console.log('interrupts')
                     if ((i + 1) in targets) {
+                      console.log('interrupts i+1 in targets')
                       const interruptedEdge = cy.add(Object.assign({
                         group: 'edges',
                         data: {
@@ -764,7 +766,7 @@ SOFTWARE.
                       }, options().handleTypes[selectedHandle].edgeParams(source,
                                                                           targets[i + 1], 1))).addClass(classes);
 
-                      options().handleTypes[selectedHandle].interrupted(source.id(), target.id(), target[i+1].id())
+                      // options().handleTypes[selectedHandle].interrupted(source.id(), target.id(), target[i+1].id())
                       added = added.add(interruptedEdge);
                       added = added.add(destinationEdge);
                       i += 1
@@ -784,12 +786,15 @@ SOFTWARE.
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
-                    options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
+                    // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
                 case 'revalidates':
                   if (target._private.data.type === 'parentNode') {
+                    console.log('revalidates source, target')
+                    console.log(source)
+                    console.log(target)
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -801,7 +806,6 @@ SOFTWARE.
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
 
-                    options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
@@ -817,8 +821,6 @@ SOFTWARE.
                         lineStyle: 'solid',
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
-
-                    options().handleTypes[selectedHandle].linked(source.id(), target.id())
 
                     added = added.add(edge);
                   }
