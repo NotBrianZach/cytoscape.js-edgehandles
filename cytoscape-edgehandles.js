@@ -620,7 +620,7 @@ SOFTWARE.
 
                 ghostNode.renderedPosition({
                   x,
-                  y
+                  y,
                 });
 
 
@@ -746,7 +746,7 @@ SOFTWARE.
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'purple',
-                          lineStyle: 'dotted',
+                          lineStyle: 'dotted'
                         },
                       }, options().handleTypes[selectedHandle].edgeParams(source,
                                                                           target, 0))).addClass(classes);
@@ -757,7 +757,7 @@ SOFTWARE.
                           source: target.id(),
                           target: targets[i + 1].id(),
                           lineColor: 'purple',
-                          lineStyle: 'dashed',
+                          lineStyle: 'dashed'
                         },
                       }, options().handleTypes[selectedHandle].edgeParams(source,
                                                                           targets[i + 1], 1))).addClass(classes);
@@ -778,8 +778,8 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'red',
-                        lineStyle: 'solid',
-                      },
+                        lineStyle: 'solid'
+                      }
                     }, options().handleTypes[selectedHandle].edgeParams(source.id(), source.data().target, target.id(), 0))).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
@@ -798,28 +798,39 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'green',
-                        lineStyle: 'solid',
-                      },
+                        lineStyle: 'solid'
+                      }
                     }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0))).addClass(classes);
 
                     added = added.add(edge);
                   }
                   break
                 case 'linkNodes':
-                console.log('case linkNodes target, source, source.data(): %o %o %o', target, source, source.data())
+                  console.log('case linkNodes target, source, source.data(): %o %o %o', target, source, source.data())
                   if (target.data().type === 'parentNode' && source.data().type === 'parentNode') {
-                    const edge = cy.add(Object.assign({
-                      group: 'edges',
-                      data: {
-                        id: `${source.id()}to${target.id()}`,
-                        source: source.id(),
-                        target: target.id(),
-                        lineColor: 'black',
-                        lineStyle: 'solid',
-                      },
-                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0))).addClass(classes);
+                    const nodeAndEdge = cy.add(Object.assign(
+                      {
+                        group: 'edges',
+                        data: {
+                          id: `${source.id()}to${target.id()}-${Math.random()}`,
+                          source: source.id(),
+                          target: target.id(),
+                          lineColor: 'black',
+                          lineStyle: 'solid'
+                        }
+                      }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0)),
+                      {
+                        group: 'nodes',
+                        data: {
+                          parent: source.id(),
+                          id: `${source.id()}child${target.id()}-${Math.random()}`,
+                          name: `${source.id()}child${target.id()}-${Math.random()}`,
+                          type: 'childNode'
+                        }
+                      });
 
-                    added = added.add(edge);
+                    added = added.add(nodeAndEdge[0].addClass(classes));
+                    added = added.add(nodeAndEdge[1]);
                   }
                   break
 
