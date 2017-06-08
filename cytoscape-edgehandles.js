@@ -725,7 +725,7 @@ SOFTWARE.
             console.log(selectedHandle)
             // targets = targets.filter(target => target.data.type === 'parentNode')
             // targets = targets.filter(target => console.log('target %0', target))
-            console.log('target %s', targets[0]._private.data.type)
+            console.log('target %s', targets[0].data().type)
             console.log('targets after filter')
             console.log(targets)
             for (let i = 0; i < targets.length; i += 1) {
@@ -735,7 +735,7 @@ SOFTWARE.
               console.log(options().handleTypes[selectedHandle].edgeType(source, target))
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
-                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
+                  if (target.data().type === 'parentNode' && source.data().type === 'childNode') {
                     console.log('interrupts')
                     if ((i + 1) in targets) {
                       console.log('interrupts i+1 in targets')
@@ -770,7 +770,7 @@ SOFTWARE.
                   } // target.type() === 'childNode' then do nothing
                   break
                 case 'invalidates':
-                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
+                  if (target.data().type === 'parentNode' && source.data().type === 'childNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -780,14 +780,14 @@ SOFTWARE.
                         lineColor: 'red',
                         lineStyle: 'solid',
                       },
-                    }, options().handleTypes[selectedHandle].edgeParams(source, source._private.data.target, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), source.data().target, target.id(), 0))).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
                   }
                   break
                 case 'revalidates':
-                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'childNode') {
+                  if (target.data().type === 'parentNode' && source.data().type === 'childNode') {
                     console.log('revalidates source, target')
                     console.log(source)
                     console.log(target)
@@ -800,14 +800,14 @@ SOFTWARE.
                         lineColor: 'green',
                         lineStyle: 'solid',
                       },
-                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0))).addClass(classes);
 
                     added = added.add(edge);
                   }
                   break
                 case 'linkNodes':
-                  console.log('case linkNodes target, source: %o %o', target, source)
-                  if (target._private.data.type === 'parentNode' && source._private.data.type === 'parentNode') {
+                console.log('case linkNodes target, source, source.data(): %o %o %o', target, source, source.data())
+                  if (target.data().type === 'parentNode' && source.data().type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
                       data: {
@@ -817,7 +817,7 @@ SOFTWARE.
                         lineColor: 'black',
                         lineStyle: 'solid',
                       },
-                    }, options().handleTypes[selectedHandle].edgeParams(source, target, 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0))).addClass(classes);
 
                     added = added.add(edge);
                   }
