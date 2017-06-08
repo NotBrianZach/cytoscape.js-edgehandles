@@ -819,7 +819,7 @@ SOFTWARE.
                           lineColor: 'black',
                           lineStyle: 'solid'
                         }
-                      }, options().handleTypes[selectedHandle].edgeParams(startNodeLinkId, target.id())),
+                      }, options().handleTypes[selectedHandle].edgeParams(source.id(), startNodeLinkId)),
                       {
                         group: 'nodes',
                         data: {
