@@ -808,29 +808,30 @@ SOFTWARE.
                 case 'linkNodes':
                   console.log('case linkNodes target, source, source.data(): %o %o %o', target, source, source.data())
                   if (target.data().type === 'parentNode' && source.data().type === 'parentNode') {
-                    const nodeAndEdge = cy.add(Object.assign(
+                    const startNodeLinkId = `${source.id()}child${target.id()}-${Math.random()}`
+                    const edgeAndNode = cy.add(Object.assign(
                       {
                         group: 'edges',
                         data: {
-                          id: `${source.id()}to${target.id()}-${Math.random()}`,
+                          id: `${startNodeLinkId}edge`,
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'black',
                           lineStyle: 'solid'
                         }
-                      }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0)),
+                      }, options().handleTypes[selectedHandle].edgeParams(startNodeLinkId, target.id())),
                       {
                         group: 'nodes',
                         data: {
                           parent: source.id(),
-                          id: `${source.id()}child${target.id()}-${Math.random()}`,
-                          name: `${source.id()}child${target.id()}-${Math.random()}`,
+                          id: startNodeLinkId,
+                          name: startNodeLinkId,
                           type: 'childNode'
                         }
                       });
 
-                    added = added.add(nodeAndEdge[0].addClass(classes));
-                    added = added.add(nodeAndEdge[1]);
+                    added = added.add(edgeAndNode[0].addClass(classes));
+                    added = added.add(edgeAndNode[1]);
                   }
                   break
 
