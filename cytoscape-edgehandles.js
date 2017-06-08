@@ -356,7 +356,7 @@ SOFTWARE.
                 acc[key] = {
                   hx: 0,
                   hy: 0,
-                  displayed: true
+                  displayed: true,
                 }
                 return acc
               }, {})
@@ -473,7 +473,8 @@ SOFTWARE.
           }
 
           let lastPanningEnabled,
-            lastZoomingEnabled, lastBoxSelectionEnabled;
+            lastZoomingEnabled,
+            lastBoxSelectionEnabled;
           function disableGestures() {
             lastPanningEnabled = cy.panningEnabled();
             lastZoomingEnabled = cy.zoomingEnabled();
@@ -619,7 +620,7 @@ SOFTWARE.
 
                 ghostNode.renderedPosition({
                   x,
-                  y,
+                  y
                 });
 
 
@@ -805,6 +806,7 @@ SOFTWARE.
                   }
                   break
                 case 'linkNodes':
+                  console.log('case linkNodes target, source: %o %o', target, source)
                   if (target._private.data.type === 'parentNode' && source._private.data.type === 'parentNode') {
                     const edge = cy.add(Object.assign({
                       group: 'edges',
