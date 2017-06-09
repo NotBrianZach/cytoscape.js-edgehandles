@@ -780,7 +780,7 @@ SOFTWARE.
                         lineColor: 'red',
                         lineStyle: 'solid'
                       }
-                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), source.data().target, target.id(), 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
@@ -800,7 +800,7 @@ SOFTWARE.
                         lineColor: 'green',
                         lineStyle: 'solid'
                       }
-                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id(), 0))).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
                     added = added.add(edge);
                   }
@@ -819,7 +819,7 @@ SOFTWARE.
                           lineColor: 'black',
                           lineStyle: 'solid'
                         }
-                      }, options().handleTypes[selectedHandle].edgeParams(source.id(), startNodeLinkId)),
+                      }, options().handleTypes[selectedHandle].edgeParams(startNodeLinkId)),
                       {
                         group: 'nodes',
                         data: {
