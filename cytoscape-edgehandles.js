@@ -778,7 +778,7 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'red',
-                        lineStyle: 'solid'
+                        lineStyle: 'dashed'
                       }
                     }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
@@ -798,7 +798,7 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'green',
-                        lineStyle: 'solid'
+                        lineStyle: 'dashed'
                       }
                     }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
