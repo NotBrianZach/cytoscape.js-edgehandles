@@ -746,10 +746,10 @@ SOFTWARE.
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'purple',
-                          lineStyle: 'dotted'
+                          lineStyle: 'dotted',
                         },
-                      }, options().handleTypes[selectedHandle].edgeParams(source,
-                                                                          target, 0))).addClass(classes);
+                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(source,
+                                                                                     target, 0) : {})).addClass(classes);
                       const destinationEdge = cy.add(Object.assign({
                         group: 'edges',
                         data: {
@@ -757,10 +757,10 @@ SOFTWARE.
                           source: target.id(),
                           target: targets[i + 1].id(),
                           lineColor: 'purple',
-                          lineStyle: 'dashed'
+                          lineStyle: 'dashed',
                         },
-                      }, options().handleTypes[selectedHandle].edgeParams(source,
-                                                                          targets[i + 1], 1))).addClass(classes);
+                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(source,
+                                                                                     targets[i + 1], 1) : {})).addClass(classes);
 
                       // options().handleTypes[selectedHandle].interrupted(source.id(), target.id(), target[i+1].id())
                       added = added.add(interruptedEdge);
@@ -779,8 +779,8 @@ SOFTWARE.
                         target: target.id(),
                         lineColor: 'red',
                         lineStyle: 'dashed'
-                      }
-                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
+                      },
+                    }, !preview ? options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()) : {})).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
@@ -798,9 +798,9 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'green',
-                        lineStyle: 'dashed'
-                      }
-                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
+                        lineStyle: 'dashed',
+                      },
+                    }, !preview ? options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()) : {})).addClass(classes);
 
                     added = added.add(edge);
                   }
@@ -817,17 +817,17 @@ SOFTWARE.
                           source: source.id(),
                           target: target.id(),
                           lineColor: 'black',
-                          lineStyle: 'solid'
-                        }
-                      }, options().handleTypes[selectedHandle].edgeParams(startNodeLinkId)),
+                          lineStyle: 'solid',
+                        },
+                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(startNodeLinkId) : {}),
                       {
                         group: 'nodes',
                         data: {
                           parent: source.id(),
                           id: startNodeLinkId,
                           name: startNodeLinkId,
-                          type: 'childNode'
-                        }
+                          type: 'childNode',
+                        },
                       });
 
                     added = added.add(edgeAndNode[0].addClass(classes));
@@ -1060,7 +1060,6 @@ SOFTWARE.
                   mdownOnHandle = false;
                   $(window).off('mousemove touchmove', moveHandler);
 
-                  console.log('doneMoving makeEdges')
                   makeEdges();
                   resetToDefaultState();
 
