@@ -733,8 +733,8 @@ SOFTWARE.
                     break
                   case 'linkNodes':
                     targets.map((target) => {
-                      const startNodeLinkId = `${source.id()}child${target.id()}-${Math.random()}`
-                      options().handleTypes[selectedHandle].complete(startNodeLinkId)
+                      const linkId = `${source.id()}child${target.id()}-${Math.random()}`
+                      options().handleTypes[selectedHandle].complete(linkId)
                       return undefined
                     })
                     break
