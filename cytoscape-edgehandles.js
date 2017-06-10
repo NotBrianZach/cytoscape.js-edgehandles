@@ -706,7 +706,40 @@ SOFTWARE.
               console.log('preview value in makeEdges %s', preview)
               if (!preview && options().preview) {
                 added = cy.elements('.edgehandles-preview').removeClass('edgehandles-preview');
-                options().complete(source, targets, added);
+                  switch (selectedHandle) {
+                    case 'interrupts':
+                      // TODO map over targets then call below (incomplete logic as well probably)
+                    for (let index = 0; index < targets.length; index += 1) {
+                      if (targets[index].data().type === 'parentNode' && index < (targets.length + 1)) {
+                        // options().handleTypes[selectedHandle].complete(source, targets, added)
+                        options().handleTypes[selectedHandle].edgeParams(source, targets[index], targets[index + 1])
+                        // options().handleTypes[selectedHandle].edgeParams(source,
+                                                                         // targets[index + 1], 1)
+                        index += 1
+                      }
+                    }
+                      break
+                    case 'invalidates':
+                      targets.map((target, targetIndex) => {
+                        options().handleTypes[selectedHandle].complete(source.id(), target.id())
+                      })
+                      break
+                    case 'revalidates':
+                      targets.map((target, targetIndex) => {
+                        options().handleTypes[selectedHandle].complete(source.id(), target.id())
+                      })
+                      break
+                    case 'linkNodes':
+                      targets.map((target, targetIndex) => {
+                        const startNodeLinkId = `${source.id()}child${target.id()}-${Math.random()}`
+                        options().handleTypes[selectedHandle].complete(startNodeLinkId)
+                      })
+                      break
+                    default:
+                      break
+                }
+
+                )
                 source.trigger('cyedgehandles.complete');
                 return;
               }
@@ -748,8 +781,7 @@ SOFTWARE.
                           lineColor: 'purple',
                           lineStyle: 'dotted',
                         },
-                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(source,
-                                                                                     target, 0) : {})).addClass(classes);
+                      }, options().handleTypes[selectedHandle].edgeParams(source, target))).addClass(classes);
                       const destinationEdge = cy.add(Object.assign({
                         group: 'edges',
                         data: {
@@ -759,8 +791,8 @@ SOFTWARE.
                           lineColor: 'purple',
                           lineStyle: 'dashed',
                         },
-                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(source,
-                                                                                     targets[i + 1], 1) : {})).addClass(classes);
+                      }, options().handleTypes[selectedHandle].edgeParams(source,
+                                                                          targets[i + 1], 1))).addClass(classes);
 
                       // options().handleTypes[selectedHandle].interrupted(source.id(), target.id(), target[i+1].id())
                       added = added.add(interruptedEdge);
@@ -780,7 +812,7 @@ SOFTWARE.
                         lineColor: 'red',
                         lineStyle: 'dashed'
                       },
-                    }, !preview ? options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()) : {})).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
                     // options().handleTypes[selectedHandle].revalidated(source.id(), target.id())
                     added = added.add(edge);
@@ -800,7 +832,7 @@ SOFTWARE.
                         lineColor: 'green',
                         lineStyle: 'dashed',
                       },
-                    }, !preview ? options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()) : {})).addClass(classes);
+                    }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
                     added = added.add(edge);
                   }
@@ -819,7 +851,7 @@ SOFTWARE.
                           lineColor: 'black',
                           lineStyle: 'solid',
                         },
-                      }, !preview ? options().handleTypes[selectedHandle].edgeParams(startNodeLinkId) : {}),
+                      }, options().handleTypes[selectedHandle].edgeParams(startNodeLinkId)),
                       {
                         group: 'nodes',
                         data: {
