@@ -706,40 +706,41 @@ SOFTWARE.
               console.log('preview value in makeEdges %s', preview)
               if (!preview && options().preview) {
                 added = cy.elements('.edgehandles-preview').removeClass('edgehandles-preview');
-                  switch (selectedHandle) {
-                    case 'interrupts':
-                      // TODO map over targets then call below (incomplete logic as well probably)
+                switch (selectedHandle) {
+                  case 'interrupts':
+                    // TODO map over targets then call below (incomplete logic as well probably)
                     for (let index = 0; index < targets.length; index += 1) {
                       if (targets[index].data().type === 'parentNode' && index < (targets.length + 1)) {
-                        // options().handleTypes[selectedHandle].complete(source, targets, added)
+                      // options().handleTypes[selectedHandle].complete(source, targets, added)
                         options().handleTypes[selectedHandle].edgeParams(source, targets[index], targets[index + 1])
-                        // options().handleTypes[selectedHandle].edgeParams(source,
-                                                                         // targets[index + 1], 1)
+                      // options().handleTypes[selectedHandle].edgeParams(source,
+                                                                       // targets[index + 1], 1)
                         index += 1
                       }
                     }
-                      break
-                    case 'invalidates':
-                      targets.map((target, targetIndex) => {
-                        options().handleTypes[selectedHandle].complete(source.id(), target.id())
-                      })
-                      break
-                    case 'revalidates':
-                      targets.map((target, targetIndex) => {
-                        options().handleTypes[selectedHandle].complete(source.id(), target.id())
-                      })
-                      break
-                    case 'linkNodes':
-                      targets.map((target, targetIndex) => {
-                        const startNodeLinkId = `${source.id()}child${target.id()}-${Math.random()}`
-                        options().handleTypes[selectedHandle].complete(startNodeLinkId)
-                      })
-                      break
-                    default:
-                      break
+                    break
+                  case 'invalidates':
+                    targets.map((target) => {
+                      options().handleTypes[selectedHandle].complete(source.id(), target.id())
+                      return undefined
+                    })
+                    break
+                  case 'revalidates':
+                    targets.map((target) => {
+                      options().handleTypes[selectedHandle].complete(source.id(), target.id())
+                      return undefined
+                    })
+                    break
+                  case 'linkNodes':
+                    targets.map((target) => {
+                      const startNodeLinkId = `${source.id()}child${target.id()}-${Math.random()}`
+                      options().handleTypes[selectedHandle].complete(startNodeLinkId)
+                      return undefined
+                    })
+                    break
+                  default:
+                    break
                 }
-
-                )
                 source.trigger('cyedgehandles.complete');
                 return;
               }
@@ -810,7 +811,7 @@ SOFTWARE.
                         source: source.id(),
                         target: target.id(),
                         lineColor: 'red',
-                        lineStyle: 'dashed'
+                        lineStyle: 'dashed',
                       },
                     }, options().handleTypes[selectedHandle].edgeParams(source.id(), target.id()))).addClass(classes);
 
