@@ -770,7 +770,7 @@ SOFTWARE.
               switch (options().handleTypes[selectedHandle].edgeType(source, target)) {
                 case 'interrupts':
                   if (target.data().type === 'parentNode' && source.data().type === 'childNode') {
-                    console.log('interrupts')
+                    console.log('interrupts, targets %o, i, %s', targets, i)
                     if ((i + 1) in targets) {
                       console.log('interrupts i+1 in targets')
                       const interruptedEdge = cy.add(Object.assign({
