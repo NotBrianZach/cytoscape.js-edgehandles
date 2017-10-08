@@ -138,7 +138,7 @@ SOFTWARE.
       },
       width() {
         return this[0].clientWidth;
-      },
+      }
     };
   };
 
@@ -207,7 +207,7 @@ SOFTWARE.
       stop(sourceNode) {
         // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
       },
-      cancel(sourceNode, renderedPosition, invalidTarget) {
+      cancel(sourceNode, renderedPosition, invalidTarget) {
         // fired when edgehandles are cancelled ( incomplete - nothing has been added ) - renderedPosition is where the edgehandle was released, invalidTarget is
         // a collection on which the handle was released, but which for other reasons (loopAllowed | edgeType) is an invalid target
       },
@@ -259,7 +259,7 @@ SOFTWARE.
     //   stop: function( sourceNode ) {
     //     // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
     //   },
-    //   cancel: function( sourceNode, renderedPosition, invalidTarget ) {
+    //   cancel: function( sourceNode, renderedPosition, invalidTarget ) {
     //     // fired when edgehandles are cancelled ( incomplete - nothing has been added ) - renderedPosition is where the edgehandle was released, invalidTarget is
     //     // a collection on which the handle was released, but which for other reasons (loopAllowed | edgeType) is an invalid target
     //   }
@@ -709,6 +709,7 @@ SOFTWARE.
                 switch (selectedHandle) {
                   case 'interrupts':
                     // TODO map over targets then call below (incomplete logic as well probably)
+                    // TODO TODO YES LOGIC IS INCOMPLETE CUZ OF RECURSIVE INTERRUPTS!
                     for (let index = 0; index < targets.length; index += 1) {
                       if (targets[index].data().type === 'parentNode' && index < (targets.length + 1)) {
                       // options().handleTypes[selectedHandle].complete(source, targets, added)
